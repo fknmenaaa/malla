@@ -1,320 +1,303 @@
-/* ============================
-   PALETA DE COLORES / ESTILO
-   ============================ */
+/* ==========================
+   PALETA DE COLORES / BASE
+   ========================== */
 
 :root {
-  --color-bg: #f3f6fb;
-  --color-bg-alt: #e4ebf5;
-  --color-primary: #1e88e5;
-  --color-primary-soft: #e3f2fd;
-  --color-primary-strong: #0d47a1;
-  --color-accent: #607d8b;
-  --color-card-bg: #ffffff;
-  --color-border: #d0d7e2;
-  --color-text-main: #263238;
-  --color-text-muted: #607d8b;
-  --color-approved: #1565c0;
-  --color-locked: #b0bec5;
-  --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.08);
-  --radius-lg: 16px;
-  --radius-md: 12px;
-  --transition-fast: 0.18s ease-out;
-  --transition-medium: 0.25s ease-out;
-  --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+    --bg-body: #f5f7fa;
+    --bg-card: #ffffff;
+    --bg-card-soft: #eef3f8;
+
+    --primary: #1b4f72;
+    --primary-light: #2874a6;
+    --primary-soft: #d6eaf8;
+
+    --accent: #16a085;
+    --accent-soft: #d1f2eb;
+
+    --text-main: #2c3e50;
+    --text-muted: #7f8c8d;
+
+    --border-soft: #d0d7e2;
+
+    --danger: #c0392b;
+
+    --shadow-soft: 0 10px 25px rgba(15, 35, 52, 0.12);
 }
 
-/* ============================
-   RESETEO BÁSICO
-   ============================ */
+/* ==========================
+   RESETEO SIMPLE
+   ========================== */
 
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  font-family: var(--font-main);
-  background: radial-gradient(circle at top, #edf3ff 0, var(--color-bg) 45%);
-  color: var(--color-text-main);
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* ============================
-   BARRA SUPERIOR
-   ============================ */
+/* ==========================
+   HEADER
+   ========================== */
 
-.top-bar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  backdrop-filter: blur(10px);
-  background: linear-gradient(
-    120deg,
-    rgba(227, 242, 253, 0.95),
-    rgba(248, 250, 252, 0.98)
-  );
-  border-bottom: 1px solid rgba(209, 213, 219, 0.7);
-  padding: 1rem 1.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem 2rem;
+.header {
+    background: linear-gradient(135deg, #0f3460, #1b4f72);
+    color: #ffffff;
+    padding: 1.75rem 1.25rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.top-bar__title h1 {
-  margin: 0;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--color-primary-strong);
+.header__contenido {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.top-bar__title p {
-  margin: 0.2rem 0 0;
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
+.header__titulo {
+    margin: 0 0 0.25rem;
+    font-size: 1.75rem;
+    letter-spacing: 0.03em;
 }
 
-.top-bar__legend {
-  margin-left: auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+.header__subtitulo {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #d6eaf8;
 }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
+/* ==========================
+   MAIN / LAYOUT
+   ========================== */
+
+.main {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 2.5rem;
 }
 
-.legend-color {
-  width: 14px;
-  height: 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.7);
+/* ==========================
+   LEYENDA
+   ========================== */
+
+.leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 1rem;
+    background-color: var(--bg-card);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 10px rgba(15, 35, 52, 0.06);
 }
 
-.legend-color--available {
-  background: var(--color-primary-soft);
+.leyenda__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
 }
 
-.legend-color--locked {
-  background: var(--color-locked);
+.leyenda__color {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
 }
 
-.legend-color--approved {
-  background: var(--color-approved);
+.leyenda__color--normal {
+    background-color: var(--bg-card-soft);
 }
 
-/* ============================
-   CONTENEDOR PRINCIPAL
-   ============================ */
-
-.main-container {
-  padding: 1.5rem;
-  max-width: 1400px;
-  margin: 0 auto;
+.leyenda__color--aprobado {
+    background-color: var(--accent-soft);
+    border-color: var(--accent);
 }
 
-/* GRID RESPONSIVO DE SEMESTRES */
-
-.grid-semestral {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
+.leyenda__color--bloqueado {
+    background-color: #fbe5e5;
+    border-color: #e57373;
 }
 
-/* ============================
-   COLUMNA DE SEMESTRE
-   ============================ */
+/* ==========================
+   MALLA / GRID DE SEMESTRES
+   ========================== */
 
-.semester-column {
-  background: var(--color-card-bg);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
+.malla {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.25rem;
 }
 
-.semester-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
+/* Tarjeta de semestre */
+
+.semestre {
+    background-color: var(--bg-card);
+    border-radius: 1rem;
+    padding: 1rem 0.9rem 1.1rem;
+    box-shadow: 0 10px 22px rgba(15, 35, 52, 0.08);
+    display: flex;
+    flex-direction: column;
+    min-height: 220px;
 }
 
-.semester-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--color-primary-strong);
+.semestre__titulo {
+    margin: 0 0 0.75rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--primary);
+    border-bottom: 1px solid var(--border-soft);
+    padding-bottom: 0.4rem;
 }
 
-.semester-count {
-  font-size: 0.75rem;
-  padding: 0.1rem 0.5rem;
-  border-radius: 999px;
-  background: var(--color-primary-soft);
-  color: var(--color-primary-strong);
+.semestre__ramos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
 }
 
-/* ============================
-   TARJETAS DE RAMOS
-   ============================ */
+/* ==========================
+   RAMOS
+   ========================== */
 
-.courses-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.ramo {
+    position: relative;
+    padding: 0.55rem 0.65rem;
+    border-radius: 0.7rem;
+    background-color: var(--bg-card-soft);
+    border: 1px solid var(--border-soft);
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    transition:
+        background-color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        opacity 0.18s ease;
 }
 
-.course-card {
-  position: relative;
-  padding: 0.6rem 0.75rem 0.65rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  background: linear-gradient(135deg, #ffffff, #f9fbff);
-  cursor: pointer;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast),
-    border-color var(--transition-fast), background var(--transition-fast);
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+.ramo:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(40, 116, 166, 0.45);
 }
 
-.course-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 18px rgba(148, 163, 184, 0.35);
-  border-color: var(--color-primary);
+.ramo:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(15, 35, 52, 0.12);
+    background-color: #e7edf5;
 }
 
-/* Estado: aprobado */
-
-.course-card--approved {
-  background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
-  border-color: var(--color-approved);
-  box-shadow: 0 12px 22px rgba(21, 101, 192, 0.24);
+.ramo__nombre {
+    flex: 1;
+    line-height: 1.3;
 }
 
-.course-card--approved .course-name {
-  text-decoration: line-through;
-  color: var(--color-approved);
-  font-weight: 600;
+/* Pequeño indicador circular a la izquierda */
+
+.ramo::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    flex-shrink: 0;
 }
 
-.course-card--approved::before {
-  content: "✔";
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  font-size: 0.9rem;
-  color: var(--color-approved);
+/* ----- Estado: aprobado ----- */
+
+.ramo.aprobado {
+    background-color: var(--accent-soft);
+    border-color: var(--accent);
+    color: #0b5345;
+    text-decoration: line-through;
+    text-decoration-thickness: 1.5px;
 }
 
-/* Estado: bloqueado (faltan requisitos) */
-
-.course-card--locked {
-  background: linear-gradient(135deg, #f8fafc, #eceff1);
-  border-style: dashed;
-  border-color: var(--color-locked);
-  cursor: not-allowed;
+.ramo.aprobado::before {
+    background-color: var(--accent);
 }
 
-.course-card--locked .course-name {
-  color: var(--color-locked);
+/* ----- Estado: bloqueado (sin requisitos) ----- */
+
+.ramo.bloqueado:not(.aprobado) {
+    opacity: 0.55;
+    cursor: not-allowed;
+    border-style: dashed;
 }
 
-.course-card--locked::before {
-  content: "🔒";
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  font-size: 0.9rem;
+.ramo.bloqueado:not(.aprobado)::before {
+    background-color: #e57373;
 }
 
-/* Texto principal del ramo */
+/* ==========================
+   MENSAJE FLOTANTE (TOAST)
+   ========================== */
 
-.course-name {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-text-main);
+.mensaje {
+    position: fixed;
+    left: 50%;
+    bottom: 1.75rem;
+    transform: translateX(-50%) translateY(20px);
+    background-color: var(--danger);
+    color: #ffffff;
+    padding: 0.7rem 1.4rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    box-shadow: 0 8px 18px rgba(192, 57, 43, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        opacity 0.18s ease-out,
+        transform 0.18s ease-out;
+    z-index: 999;
 }
 
-/* Línea de requisitos dentro de la tarjeta */
-
-.course-prereqs {
-  font-size: 0.72rem;
-  color: var(--color-text-muted);
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
+.mensaje--visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
-.course-prereqs::before {
-  content: "Req:";
-  font-weight: 600;
-}
-
-/* ============================
-   MENSAJE INFORMATIVO
-   ============================ */
-
-.message-bar {
-  position: sticky;
-  bottom: 0;
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(90deg, var(--color-bg-alt), var(--color-bg));
-  border-top: 1px solid rgba(148, 163, 184, 0.6);
-  font-size: 0.85rem;
-  color: var(--color-text-main);
-}
-
-#message-text {
-  margin: 0;
-}
-
-/* Animación simple para cambios de mensaje */
-
-.message-bar--highlight {
-  animation: flash-message 0.4s ease-out;
-}
-
-@keyframes flash-message {
-  0% {
-    background-color: #e3f2fd;
-  }
-  100% {
-    background-color: transparent;
-  }
-}
-
-/* ============================
-   FOOTER
-   ============================ */
-
-.footer {
-  text-align: center;
-  padding: 0.75rem 1.5rem 1.25rem;
-  font-size: 0.78rem;
-  color: var(--color-text-muted);
-}
-
-/* ============================
-   RESPONSIVE AJUSTES
-   ============================ */
+/* ==========================
+   RESPONSIVE
+   ========================== */
 
 @media (max-width: 768px) {
-  .top-bar {
-    align-items: flex-start;
-  }
+    .header {
+        padding: 1.25rem 1rem;
+    }
 
-  .top-bar__legend {
-    margin-left: 0;
-  }
+    .header__titulo {
+        font-size: 1.35rem;
+    }
+
+    .main {
+        padding-inline: 1rem;
+    }
+
+    .semestre {
+        padding: 0.9rem 0.8rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .leyenda {
+        gap: 0.7rem;
+    }
+
+    .ramo {
+        font-size: 0.85rem;
+    }
 }
