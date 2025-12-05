@@ -1,50 +1,50 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Malla Curricular Interactiva</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Hoja de estilos -->
-  <link rel="stylesheet" href="estilos.css" />
+    <meta charset="UTF-8" />
+    <title>Malla Curricular Interactiva</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="estilos.css" />
 </head>
 <body>
-  <header class="top-bar">
-    <div class="top-bar__title">
-      <h1>Malla Curricular Interactiva</h1>
-      <p>Haz clic en un ramo para marcarlo como aprobado. Los requisitos se validan automáticamente.</p>
-    </div>
-    <div class="top-bar__legend">
-      <div class="legend-item">
-        <span class="legend-color legend-color--available"></span>
-        <span>Disponible</span>
-      </div>
-      <div class="legend-item">
-        <span class="legend-color legend-color--locked"></span>
-        <span>Bloqueado (faltan requisitos)</span>
-      </div>
-      <div class="legend-item">
-        <span class="legend-color legend-color--approved"></span>
-        <span>Aprobado</span>
-      </div>
-    </div>
-  </header>
+    <!-- Encabezado principal -->
+    <header class="header">
+        <div class="header__contenido">
+            <h1 class="header__titulo">Malla Curricular Interactiva</h1>
+            <p class="header__subtitulo">
+                Haz clic en los ramos para marcarlos como <strong>aprobados</strong>.
+                Los requisitos se validan automáticamente y tu progreso se guarda.
+            </p>
+        </div>
+    </header>
 
-  <main class="main-container">
-    <!-- Contenedor donde se generarán dinámicamente las columnas por semestre -->
-    <div id="grid-semestral" class="grid-semestral"></div>
-  </main>
+    <!-- Contenedor principal de la malla -->
+    <main class="main">
+        <!-- Leyenda de colores/estados -->
+        <section class="leyenda">
+            <div class="leyenda__item">
+                <span class="leyenda__color leyenda__color--normal"></span>
+                <span>Ramo disponible</span>
+            </div>
+            <div class="leyenda__item">
+                <span class="leyenda__color leyenda__color--aprobado"></span>
+                <span>Ramo aprobado</span>
+            </div>
+            <div class="leyenda__item">
+                <span class="leyenda__color leyenda__color--bloqueado"></span>
+                <span>Ramo bloqueado (faltan requisitos)</span>
+            </div>
+        </section>
 
-  <!-- Área de mensajes (bloqueos, avisos, etc.) -->
-  <section class="message-bar" aria-live="polite">
-    <p id="message-text"></p>
-  </section>
+        <!-- Aquí se renderizan los semestres y ramos desde JavaScript -->
+        <section id="malla" class="malla"></section>
+    </main>
 
-  <footer class="footer">
-    <p>Malla almacenada en tu navegador (LocalStorage). Puedes cerrar y volver, se mantiene el progreso.</p>
-  </footer>
+    <!-- Mensajes flotantes (errores de requisitos, etc.) -->
+    <div id="mensaje" class="mensaje" aria-live="polite"></div>
 
-  <!-- Lógica de la malla -->
-  <script src="script.js"></script>
+    <!-- Lógica de la malla -->
+    <script src="script.js"></script>
 </body>
 </html>
-
