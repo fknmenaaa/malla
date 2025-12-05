@@ -1,536 +1,540 @@
-/* =========================================================
-   MALLA CURRICULAR INTERACTIVA
-   - Genera la malla en base a datos JS
-   - Marca ramos aprobados
-   - Valida requisitos antes de aprobar
-   - Persiste estado en localStorage
-   ========================================================= */
+// ==============================
+//  MALLA CURRICULAR INTERACTIVA
+//  - Organización por semestres
+//  - Click para aprobar ramos
+//  - Validación de requisitos
+//  - Persistencia con localStorage
+// ==============================
 
-/* Clave para guardar en LocalStorage */
-const STORAGE_KEY = "mallaMineriaAprobados";
-
-/* ---------------------------------------------------------
-   DEFINICIÓN DE RAMOS POR SEMESTRE
-   - id: identificador interno (sin espacios ni tildes)
-   - name: nombre que se muestra en pantalla
-   --------------------------------------------------------- */
-
-const semesters = [
-  {
-    name: "Semestre 1",
-    courses: [
-      { id: "intro_calculo", name: "Introducción al cálculo" },
-      { id: "intro_algebra", name: "Introducción al álgebra" },
-      { id: "intro_fisica", name: "Introducción a la Física clásica" },
-      { id: "herramientas_compu", name: "Herramientas Computacionales" },
-      { id: "desafios", name: "Desafíos" },
-      { id: "biologia", name: "Biología" }
-    ]
-  },
-  {
-    name: "Semestre 2",
-    courses: [
-      { id: "calculo_diferencial", name: "Cálculo Diferencial" },
-      { id: "algebra_lineal", name: "Álgebra lineal" },
-      { id: "moderna", name: "Moderna" },
-      { id: "progra", name: "Progra" },
-      { id: "proyectos", name: "Proyectos" }
-    ]
-  },
-  {
-    name: "Semestre 3",
-    courses: [
-      { id: "cvv", name: "CVV" },
-      { id: "edo", name: "EDO" },
-      { id: "mecanica", name: "Mecánica" },
-      { id: "metodos", name: "Métodos" },
-      { id: "quimica", name: "Química" }
-    ]
-  },
-  {
-    name: "Semestre 4",
-    courses: [
-      { id: "caa", name: "CAA" },
-      { id: "economia", name: "Economía" },
-      { id: "electromagnetismo", name: "Electromagnetismo" },
-      { id: "termodinamica", name: "Termodinámica" },
-      { id: "modulo", name: "Módulo" }
-    ]
-  },
-  {
-    name: "Semestre 5",
-    courses: [
-      { id: "probabilidad", name: "Probabilidad" },
-      { id: "quimica_mineralogica", name: "Química mineralógica" },
-      { id: "geologia_ing", name: "Geología para ingenieros" },
-      { id: "mineria_sustentabilidad", name: "Minería y Sustentabilidad" },
-      { id: "mecanica_rocas_1", name: "Mecánica de rocas 1" }
-    ]
-  },
-  {
-    name: "Semestre 6",
-    courses: [
-      { id: "optimizacion", name: "Optimización" },
-      { id: "fisioquimica", name: "Fisioquímica" },
-      { id: "intro_yacimientos", name: "Introducción a Yacimientos" },
-      { id: "fenomenos", name: "Fenómenos" },
-      { id: "mecanica_rocas_2", name: "Mecánica de rocas 2" }
-    ]
-  },
-  {
-    name: "Semestre 7",
-    courses: [
-      { id: "evaluacion_proyectos", name: "Evaluación de proyectos" },
-      { id: "metalurgia_extractiva", name: "Metalurgia extractiva" },
-      {
-        id: "analisis_geoestadistico",
-        name: "Análisis estadístico y geoestadístico de datos"
-      },
-      {
-        id: "fundamentos_tecnologia_minera",
-        name: "Fundamentos de tecnología minera"
-      },
-      {
-        id: "procesamiento_minerales_1",
-        name: "Procesamiento de minerales 1"
-      },
-      { id: "practica_profesional_1", name: "Práctica profesional 1" }
-    ]
-  },
-  {
-    name: "Semestre 8",
-    courses: [
-      { id: "economia_minerales", name: "Economía de minerales" },
-      { id: "evaluacion_yacimientos", name: "Evaluación de yacimientos" },
-      { id: "legislacion_minera", name: "Legislación minera" },
-      {
-        id: "medioambiente_comunidades",
-        name: "Medio ambiente y comunidades"
-      },
-      {
-        id: "procesamiento_minerales_2",
-        name: "Procesamiento de minerales 2"
-      }
-    ]
-  },
-  {
-    name: "Semestre 9",
-    courses: [
-      {
-        id: "diseno_minas_subterraneas",
-        name: "Diseño y planificación de minas subterráneas"
-      },
-      {
-        id: "diseno_minas_cielo_abierto",
-        name: "Diseño y planificación de minas a cielo abierto"
-      },
-      {
-        id: "gestion_operaciones_mineras",
-        name: "Gestión de operaciones mineras"
-      },
-      { id: "seguridad_minera", name: "Seguridad minera" },
-      { id: "aguas_relaves", name: "Aguas y relaves" },
-      { id: "electivo_especialidad_1", name: "Electivo de especialidad" },
-      { id: "practica_profesional_2", name: "Práctica profesional 2" }
-    ]
-  },
-  {
-    name: "Semestre 10",
-    courses: [
-      {
-        id: "intro_titulo_trabajo",
-        name: "Introducción al título de trabajo"
-      },
-      { id: "taller_proyecto_minero", name: "Taller de proyecto minero" },
-      {
-        id: "evaluacion_gestion_proyectos_mineros",
-        name: "Evaluación y gestión de proyectos mineros"
-      },
-      { id: "electivo_especialidad_2", name: "Electivo especialidad 1" },
-      { id: "electivo_especialidad_3", name: "Electivo especialidad 2" }
-    ]
-  },
-  {
-    name: "Semestre 11",
-    courses: [
-      { id: "trabajo_titulo", name: "Trabajo de título" }
-    ]
-  }
+// ----- Definición de la malla: semestres y ramos -----
+const semestres = [
+    {
+        nombre: "Semestre 1",
+        ramos: [
+            { id: "intro-calculo", nombre: "Introducción al cálculo" },
+            { id: "intro-algebra", nombre: "Introducción al álgebra" },
+            { id: "intro-fisica", nombre: "Introducción a la Física clásica" },
+            { id: "herr-compu", nombre: "Herramientas Computacionales" },
+            { id: "desafios", nombre: "Desafíos" },
+            { id: "biologia", nombre: "Biología" }
+        ]
+    },
+    {
+        nombre: "Semestre 2",
+        ramos: [
+            { id: "calculo-diferencial", nombre: "Cálculo Diferencial" },
+            { id: "algebra-lineal", nombre: "Álgebra lineal" },
+            { id: "moderna", nombre: "Moderna" },
+            { id: "progra", nombre: "Progra" },
+            { id: "proyectos", nombre: "Proyectos" }
+        ]
+    },
+    {
+        nombre: "Semestre 3",
+        ramos: [
+            { id: "cvv", nombre: "CVV" },
+            { id: "edo", nombre: "EDO" },
+            { id: "mecanica", nombre: "Mecánica" },
+            { id: "metodos", nombre: "Métodos" },
+            { id: "quimica", nombre: "Química" }
+        ]
+    },
+    {
+        nombre: "Semestre 4",
+        ramos: [
+            { id: "caa", nombre: "CAA" },
+            { id: "economia", nombre: "Economía" },
+            { id: "electromagnetismo", nombre: "Electromagnetismo" },
+            { id: "termodinamica", nombre: "Termodinámica" },
+            { id: "modulo", nombre: "Módulo" }
+        ]
+    },
+    {
+        nombre: "Semestre 5",
+        ramos: [
+            { id: "probabilidad", nombre: "Probabilidad" },
+            { id: "quimica-mineralogica", nombre: "Química mineralógica" },
+            { id: "geologia-ing", nombre: "Geología para ingenieros" },
+            { id: "mineria-sustentabilidad", nombre: "Minería y Sustentabilidad" },
+            { id: "mec-rocas-1", nombre: "Mecánica de rocas 1" }
+        ]
+    },
+    {
+        nombre: "Semestre 6",
+        ramos: [
+            { id: "optimizacion", nombre: "Optimización" },
+            { id: "fisioquimica", nombre: "Fisioquímica" },
+            { id: "intro-yacimientos", nombre: "Introducción a Yacimientos" },
+            { id: "fenomenos", nombre: "Fenómenos" },
+            { id: "mec-rocas-2", nombre: "Mecánica de rocas 2" }
+        ]
+    },
+    {
+        nombre: "Semestre 7",
+        ramos: [
+            { id: "evaluacion-proyectos", nombre: "Evaluación de proyectos" },
+            { id: "metalurgia-extractiva", nombre: "Metalurgia extractiva" },
+            {
+                id: "analisis-geoestadistico",
+                nombre: "Análisis estadístico y geoestadístico de datos"
+            },
+            {
+                id: "fundamentos-tec-minera",
+                nombre: "Fundamentos de tecnología minera"
+            },
+            {
+                id: "proc-minerales-1",
+                nombre: "Procesamiento de minerales 1"
+            },
+            {
+                id: "practica-1",
+                nombre: "Práctica profesional 1"
+            }
+        ]
+    },
+    {
+        nombre: "Semestre 8",
+        ramos: [
+            {
+                id: "economia-minerales",
+                nombre: "Economía de minerales"
+            },
+            {
+                id: "evaluacion-yacimientos",
+                nombre: "Evaluación de yacimientos"
+            },
+            {
+                id: "legislacion-minera",
+                nombre: "Legislación minera"
+            },
+            {
+                id: "medio-ambiente-comunidades",
+                nombre: "Medio ambiente y comunidades"
+            },
+            {
+                id: "proc-minerales-2",
+                nombre: "Procesamiento de minerales 2"
+            }
+        ]
+    },
+    {
+        nombre: "Semestre 9",
+        ramos: [
+            {
+                id: "diseno-minas-sub",
+                nombre: "Diseño y planificación de minas subterráneas"
+            },
+            {
+                id: "diseno-minas-cielo",
+                nombre: "Diseño y planificación de minas a cielo abierto"
+            },
+            {
+                id: "gestion-operaciones",
+                nombre: "Gestión de operaciones mineras"
+            },
+            {
+                id: "seguridad-minera",
+                nombre: "Seguridad minera"
+            },
+            {
+                id: "aguas-relaves",
+                nombre: "Aguas y relaves"
+            },
+            {
+                id: "electivo-especialidad-1",
+                nombre: "Electivo de especialidad"
+            },
+            {
+                id: "practica-2",
+                nombre: "Práctica profesional 2"
+            }
+        ]
+    },
+    {
+        nombre: "Semestre 10",
+        ramos: [
+            {
+                id: "introduccion-titulo",
+                nombre: "Introducción al título de trabajo"
+            },
+            {
+                id: "taller-proyecto-minero",
+                nombre: "Taller de proyecto minero"
+            },
+            {
+                id: "eval-gestion-proyectos-mineros",
+                nombre: "Evaluación y gestión de proyectos mineros"
+            },
+            {
+                id: "electivo-especialidad-2",
+                nombre: "Electivo especialidad"
+            },
+            {
+                id: "electivo-especialidad-3",
+                nombre: "Electivo especialidad"
+            }
+        ]
+    },
+    {
+        nombre: "Semestre 11",
+        ramos: [
+            {
+                id: "trabajo-titulo",
+                nombre: "Trabajo de título"
+            }
+        ]
+    }
 ];
 
-/* ---------------------------------------------------------
-   LISTA DE REQUISITOS POR RAMO
-   - clave: id del ramo
-   - valor: arreglo de ids de ramos requisitos
-   --------------------------------------------------------- */
+// ----- Requisitos de cada ramo (por ID) -----
+// IMPORTANTE:
+//  - Si un ramo no aparece aquí, se asume "sin requisitos".
+//  - Las claves DEBEN coincidir con los id definidos arriba.
+const requisitos = {
+    // Semestre 2
+    "calculo-diferencial": ["intro-calculo"],
+    "algebra-lineal": ["intro-algebra"],
+    moderna: ["intro-calculo", "intro-algebra", "intro-fisica"],
+    progra: ["herr-compu"],
+    proyectos: ["desafios"],
 
-const prerequisites = {
-  // Semestre 2
-  calculo_diferencial: ["intro_calculo"],
-  algebra_lineal: ["intro_algebra"],
-  moderna: ["intro_calculo", "intro_algebra", "intro_fisica"],
-  progra: ["herramientas_compu"],
-  proyectos: ["desafios"],
+    // Semestre 3
+    cvv: ["calculo-diferencial", "algebra-lineal"],
+    edo: ["calculo-diferencial", "algebra-lineal"],
+    mecanica: ["calculo-diferencial", "algebra-lineal", "moderna"],
+    metodos: ["calculo-diferencial", "moderna"],
+    quimica: ["moderna", "progra"],
 
-  // Semestre 3
-  cvv: ["calculo_diferencial", "algebra_lineal"],
-  edo: ["calculo_diferencial", "algebra_lineal"],
-  mecanica: ["calculo_diferencial", "algebra_lineal", "moderna"],
-  metodos: ["calculo_diferencial", "moderna"],
-  quimica: ["moderna", "progra"],
+    // Semestre 4
+    caa: ["cvv", "edo"],
+    economia: ["cvv"],
+    electromagnetismo: ["cvv", "edo", "mecanica"],
+    termodinamica: ["quimica", "cvv", "mecanica"],
+    modulo: ["metodos", "proyectos"],
 
-  // Semestre 4
-  caa: ["cvv", "edo"],
-  economia: ["cvv"],
-  electromagnetismo: ["cvv", "edo", "mecanica"],
-  termodinamica: ["quimica", "cvv", "mecanica"],
-  modulo: ["metodos", "proyectos"],
+    // Semestre 5
+    probabilidad: ["cvv"],
+    "quimica-mineralogica": ["quimica"],
+    "geologia-ing": ["calculo-diferencial", "modulo"],
+    "mineria-sustentabilidad": ["modulo"],
+    "mec-rocas-1": ["mecanica"],
 
-  // Semestre 5
-  probabilidad: ["cvv"],
-  quimica_mineralogica: ["quimica"],
-  geologia_ing: ["calculo_diferencial", "modulo"],
-  mineria_sustentabilidad: ["modulo"],
-  mecanica_rocas_1: ["mecanica"],
+    // Semestre 6
+    optimizacion: ["caa"],
+    fisioquimica: ["termodinamica"],
+    "intro-yacimientos": ["geologia-ing", "quimica-mineralogica"],
+    fenomenos: ["termodinamica"],
+    "mec-rocas-2": ["mec-rocas-1", "geologia-ing"],
 
-  // Semestre 6
-  optimizacion: ["caa"],
-  fisioquimica: ["termodinamica"],
-  intro_yacimientos: ["geologia_ing", "quimica_mineralogica"],
-  fenomenos: ["termodinamica"],
-  mecanica_rocas_2: ["mecanica_rocas_1", "geologia_ing"],
+    // Semestre 7
+    "evaluacion-proyectos": ["probabilidad", "economia"],
+    "metalurgia-extractiva": [
+        "quimica-mineralogica",
+        "fenomenos",
+        "fisioquimica"
+    ],
+    "analisis-geoestadistico": ["probabilidad"],
+    "fundamentos-tec-minera": ["mec-rocas-2"],
+    "proc-minerales-1": [
+        "quimica-mineralogica",
+        "mineria-sustentabilidad"
+    ],
+    "practica-1": ["mineria-sustentabilidad", "geologia-ing"],
 
-  // Semestre 7
-  evaluacion_proyectos: ["probabilidad", "economia"],
-  metalurgia_extractiva: [
-    "quimica_mineralogica",
-    "fenomenos",
-    "fisioquimica"
-  ],
-  analisis_geoestadistico: ["probabilidad"],
-  fundamentos_tecnologia_minera: ["mecanica_rocas_2"],
-  procesamiento_minerales_1: [
-    "quimica_mineralogica",
-    "mineria_sustentabilidad"
-  ],
-  practica_profesional_1: ["mineria_sustentabilidad", "geologia_ing"],
+    // Semestre 8
+    "economia-minerales": [
+        "evaluacion-proyectos",
+        "mineria-sustentabilidad",
+        "optimizacion"
+    ],
+    "evaluacion-yacimientos": [
+        "intro-yacimientos",
+        "analisis-geoestadistico"
+    ],
+    "legislacion-minera": ["mineria-sustentabilidad"],
+    "medio-ambiente-comunidades": [
+        "metalurgia-extractiva",
+        "fundamentos-tec-minera"
+    ],
+    "proc-minerales-2": ["proc-minerales-1", "fenomenos"],
 
-  // Semestre 8
-  economia_minerales: [
-    "evaluacion_proyectos",
-    "mineria_sustentabilidad",
-    "optimizacion"
-  ],
-  evaluacion_yacimientos: [
-    "intro_yacimientos",
-    "analisis_geoestadistico"
-  ],
-  legislacion_minera: ["mineria_sustentabilidad"],
-  medioambiente_comunidades: [
-    "metalurgia_extractiva",
-    "fundamentos_tecnologia_minera"
-  ],
-  procesamiento_minerales_2: [
-    "procesamiento_minerales_1",
-    "fenomenos"
-  ],
+    // Semestre 9
+    "diseno-minas-sub": [
+        "evaluacion-proyectos",
+        "fundamentos-tec-minera",
+        "analisis-geoestadistico"
+    ],
+    "diseno-minas-cielo": [
+        "evaluacion-proyectos",
+        "fundamentos-tec-minera",
+        "analisis-geoestadistico"
+    ],
+    "gestion-operaciones": [
+        "fundamentos-tec-minera",
+        "proc-minerales-2",
+        "economia-minerales",
+        "analisis-geoestadistico"
+    ],
+    "seguridad-minera": ["practica-1", "fundamentos-tec-minera"],
+    "aguas-relaves": ["proc-minerales-2"],
+    "electivo-especialidad-1": [], // sin requisitos
 
-  // Semestre 9
-  diseno_minas_subterraneas: [
-    "evaluacion_proyectos",
-    "fundamentos_tecnologia_minera",
-    "analisis_geoestadistico"
-  ],
-  diseno_minas_cielo_abierto: [
-    "evaluacion_proyectos",
-    "fundamentos_tecnologia_minera",
-    "analisis_geoestadistico"
-  ],
-  gestion_operaciones_mineras: [
-    "fundamentos_tecnologia_minera",
-    "procesamiento_minerales_2",
-    "economia_minerales",
-    "analisis_geoestadistico"
-  ],
-  seguridad_minera: [
-    "practica_profesional_1",
-    "fundamentos_tecnologia_minera"
-  ],
-  aguas_relaves: ["procesamiento_minerales_2"],
-  // Electivo especialidad 1: sin requisitos
-  // Práctica profesional 2:
-  practica_profesional_2: [
-    "practica_profesional_1",
-    "metalurgia_extractiva",
-    "fundamentos_tecnologia_minera"
-  ],
+    // Semestre 9 (Práctica 2)
+    "practica-2": [
+        "practica-1",
+        "metalurgia-extractiva",
+        "fundamentos-tec-minera"
+    ],
 
-  // Semestre 10
-  intro_titulo_trabajo: ["practica_profesional_2"],
-  taller_proyecto_minero: [
-    "procesamiento_minerales_2",
-    "seguridad_minera",
-    "diseno_minas_cielo_abierto",
-    "diseno_minas_subterraneas"
-  ],
-  evaluacion_gestion_proyectos_mineros: [
-    "economia_minerales",
-    "procesamiento_minerales_2",
-    "fundamentos_tecnologia_minera"
-  ],
-  // Electivos especialidad 2 y 3: sin requisitos
+    // Semestre 10
+    "introduccion-titulo": ["practica-2"],
+    "taller-proyecto-minero": [
+        "proc-minerales-2",
+        "seguridad-minera",
+        "diseno-minas-cielo",
+        "diseno-minas-sub"
+    ],
+    "eval-gestion-proyectos-mineros": [
+        "economia-minerales", // corregido desde "economia de materiales"
+        "proc-minerales-2",
+        "fundamentos-tec-minera"
+    ],
+    "electivo-especialidad-2": [], // sin requisitos
+    "electivo-especialidad-3": [], // sin requisitos
 
-  // Semestre 11
-  trabajo_titulo: ["intro_titulo_trabajo", "taller_proyecto_minero"]
+    // Semestre 11
+    "trabajo-titulo": [
+        "introduccion-titulo",
+        "taller-proyecto-minero"
+    ]
 };
 
-/* ---------------------------------------------------------
-   MAPA AUXILIAR: id -> nombre del ramo
-   --------------------------------------------------------- */
+// ----- Estado en memoria -----
+let aprobados = new Set();      // IDs de ramos aprobados
+let mapaRamos = {};             // id -> nombre (para mostrar en mensajes)
+let mensajeTimeoutId = null;    // controlar timeout del mensaje
 
-const courseNameById = {};
-semesters.forEach((sem) => {
-  sem.courses.forEach((c) => {
-    courseNameById[c.id] = c.name;
-  });
-});
+// Clave para localStorage
+const STORAGE_KEY = "malla-aprobados-v1";
 
-/* ---------------------------------------------------------
-   ESTADO ACTUAL: conjunto de ramos aprobados
-   --------------------------------------------------------- */
-
-/**
- * Conjunto (Set) con los ids de ramos aprobados.
- * Se carga desde localStorage si existe.
- */
-const approvedCourses = loadApprovedFromStorage();
-
-/* ---------------------------------------------------------
-   FUNCIÓN PRINCIPAL: INICIALIZAR INTERFAZ
-   --------------------------------------------------------- */
+// ==============================
+//  INICIALIZACIÓN
+// ==============================
 
 document.addEventListener("DOMContentLoaded", () => {
-  const grid = document.getElementById("grid-semestral");
-  buildSemesterColumns(grid); // Generar columnas y tarjetas
-  updateLockStates();        // Marcar visualmente ramos bloqueados / disponibles
-  refreshApprovedStyles();   // Aplicar estilos de aprobados desde localStorage
-});
+    const contenedorMalla = document.getElementById("malla");
 
-/* ---------------------------------------------------------
-   CONSTRUCCIÓN DEL DOM
-   --------------------------------------------------------- */
-
-/**
- * Genera dinámicamente las columnas por semestre y sus ramos.
- */
-function buildSemesterColumns(gridContainer) {
-  semesters.forEach((semester) => {
-    const column = document.createElement("section");
-    column.className = "semester-column";
-
-    const header = document.createElement("div");
-    header.className = "semester-header";
-
-    const title = document.createElement("h2");
-    title.className = "semester-title";
-    title.textContent = semester.name;
-
-    const count = document.createElement("span");
-    count.className = "semester-count";
-    count.textContent = `${semester.courses.length} ramos`;
-
-    header.appendChild(title);
-    header.appendChild(count);
-
-    const list = document.createElement("div");
-    list.className = "courses-list";
-
-    semester.courses.forEach((course) => {
-      const card = document.createElement("article");
-      card.className = "course-card";
-      card.dataset.id = course.id;
-
-      const nameEl = document.createElement("div");
-      nameEl.className = "course-name";
-      nameEl.textContent = course.name;
-      card.appendChild(nameEl);
-
-      // Si tiene requisitos, mostrar una línea dentro de la tarjeta
-      const prereqs = prerequisites[course.id];
-      if (prereqs && prereqs.length > 0) {
-        const prereqText = prereqs
-          .map((id) => courseNameById[id] || id)
-          .join(", ");
-        const prereqEl = document.createElement("div");
-        prereqEl.className = "course-prereqs";
-        prereqEl.textContent = prereqText;
-        card.appendChild(prereqEl);
-      }
-
-      // Manejar clic para aprobar / desaprobar
-      card.addEventListener("click", () => handleCourseClick(course.id));
-
-      list.appendChild(card);
+    // 1) Construir mapa id -> nombre (para mensajes, títulos, etc.)
+    semestres.forEach((semestre) => {
+        semestre.ramos.forEach((ramo) => {
+            mapaRamos[ramo.id] = ramo.nombre;
+        });
     });
 
-    column.appendChild(header);
-    column.appendChild(list);
-    gridContainer.appendChild(column);
-  });
-}
+    // 2) Cargar estado desde localStorage
+    cargarEstadoDesdeStorage();
 
-/* ---------------------------------------------------------
-   LÓGICA DE APROBACIÓN Y BLOQUEO
-   --------------------------------------------------------- */
+    // 3) Renderizar la malla
+    semestres.forEach((semestre) => {
+        const columna = document.createElement("section");
+        columna.classList.add("semestre");
 
-/**
- * Maneja el clic en un ramo.
- * - Si ya está aprobado: lo desmarca (permite retroceder).
- * - Si no está aprobado: verifica requisitos antes de aprobar.
- */
-function handleCourseClick(courseId) {
-  const isApproved = approvedCourses.has(courseId);
+        const titulo = document.createElement("h2");
+        titulo.classList.add("semestre__titulo");
+        titulo.textContent = semestre.nombre;
+        columna.appendChild(titulo);
 
-  if (isApproved) {
-    // Desmarcar como aprobado sin validar requisitos
-    approvedCourses.delete(courseId);
-    saveApprovedToStorage();
-    refreshApprovedStyles();
-    updateLockStates();
-    showMessage(
-      `Se desmarcó «${courseNameById[courseId]}» como aprobado.`,
-      false
-    );
-    return;
-  }
+        const contRamos = document.createElement("div");
+        contRamos.classList.add("semestre__ramos");
 
-  // Verificar requisitos antes de aprobar
-  const missing = getMissingPrerequisites(courseId);
+        semestre.ramos.forEach((ramo) => {
+            const item = document.createElement("div");
+            item.classList.add("ramo");
+            item.dataset.id = ramo.id;
+            item.setAttribute("role", "button");
+            item.setAttribute("tabindex", "0");
 
-  if (missing.length > 0) {
-    // Tiene requisitos pendientes → mostrar mensaje y NO aprobar
-    const missingNames = missing
-      .map((id) => courseNameById[id] || id)
-      .join(", ");
-    showMessage(
-      `No puedes aprobar «${courseNameById[courseId]}» porque faltan: ${missingNames}.`,
-      true
-    );
-    return;
-  }
+            // Título con requisitos para mostrar en tooltip
+            const reqs = requisitos[ramo.id] || [];
+            if (reqs.length > 0) {
+                const nombresReq = reqs.map(
+                    (idReq) => mapaRamos[idReq] || idReq
+                );
+                item.title = "Requisitos: " + nombresReq.join(", ");
+            } else {
+                item.title = "Sin requisitos";
+            }
 
-  // Requisitos cumplidos → aprobar
-  approvedCourses.add(courseId);
-  saveApprovedToStorage();
-  refreshApprovedStyles();
-  updateLockStates();
-  showMessage(`Marcaste «${courseNameById[courseId]}» como aprobado.`, false);
-}
+            // Texto del ramo
+            const spanNombre = document.createElement("span");
+            spanNombre.classList.add("ramo__nombre");
+            spanNombre.textContent = ramo.nombre;
+            item.appendChild(spanNombre);
 
-/**
- * Devuelve un arreglo con los ids de requisitos que aún no han sido aprobados.
- */
-function getMissingPrerequisites(courseId) {
-  const reqs = prerequisites[courseId] || [];
-  return reqs.filter((reqId) => !approvedCourses.has(reqId));
-}
+            // Marcar como aprobado si estaba en el estado guardado
+            if (aprobados.has(ramo.id)) {
+                item.classList.add("aprobado");
+                item.setAttribute("aria-pressed", "true");
+            } else {
+                item.setAttribute("aria-pressed", "false");
+            }
 
-/* ---------------------------------------------------------
-   ESTILOS DINÁMICOS SEGÚN ESTADO
-   --------------------------------------------------------- */
+            // Manejar click (toggle de aprobado)
+            item.addEventListener("click", manejarClickRamo);
 
-/**
- * Recorre todas las tarjetas y aplica / quita la clase de aprobado.
- */
-function refreshApprovedStyles() {
-  const allCards = document.querySelectorAll(".course-card");
-  allCards.forEach((card) => {
-    const id = card.dataset.id;
-    if (approvedCourses.has(id)) {
-      card.classList.add("course-card--approved");
-    } else {
-      card.classList.remove("course-card--approved");
-    }
-  });
-}
+            // Accesible con Enter y Barra Espaciadora
+            item.addEventListener("keydown", (evento) => {
+                if (evento.key === "Enter" || evento.key === " ") {
+                    evento.preventDefault();
+                    manejarClickRamo.call(item, evento);
+                }
+            });
+
+            contRamos.appendChild(item);
+        });
+
+        columna.appendChild(contRamos);
+        contenedorMalla.appendChild(columna);
+    });
+
+    // 4) Calcular ramos bloqueados inicialmente
+    actualizarBloqueos();
+});
+
+// ==============================
+//  MANEJADORES / LÓGICA
+// ==============================
 
 /**
- * Marca visualmente qué ramos están "bloqueados" (faltan requisitos)
- * y cuáles están disponibles para aprobar.
+ * Maneja el click en un ramo:
+ * - Si está aprobado, lo desmarca.
+ * - Si NO está aprobado, verifica requisitos antes de aprobarlo.
  */
-function updateLockStates() {
-  const allCards = document.querySelectorAll(".course-card");
-  allCards.forEach((card) => {
-    const id = card.dataset.id;
-    const missing = getMissingPrerequisites(id);
+function manejarClickRamo() {
+    const idRamo = this.dataset.id;
+    const yaAprobado = aprobados.has(idRamo);
 
-    // Si ya está aprobado, nunca se ve bloqueado
-    if (approvedCourses.has(id)) {
-      card.classList.remove("course-card--locked");
-      return;
+    // Si ya estaba aprobado, lo desmarcamos (toggle)
+    if (yaAprobado) {
+        aprobados.delete(idRamo);
+        this.classList.remove("aprobado");
+        this.setAttribute("aria-pressed", "false");
+        guardarEstadoEnStorage();
+        actualizarBloqueos();
+        return;
     }
 
-    if (missing.length > 0) {
-      card.classList.add("course-card--locked");
-    } else {
-      card.classList.remove("course-card--locked");
+    // Si no estaba aprobado, revisar requisitos
+    const reqs = requisitos[idRamo] || [];
+    const faltantes = reqs.filter((idReq) => !aprobados.has(idReq));
+
+    if (faltantes.length > 0) {
+        // Construir mensaje con los nombres de los requisitos faltantes
+        const nombresFaltantes = faltantes.map(
+            (id) => mapaRamos[id] || id
+        );
+        const nombreRamo = mapaRamos[idRamo] || idRamo;
+
+        mostrarMensaje(
+            `No puedes aprobar "${nombreRamo}" porque te faltan: ${nombresFaltantes.join(
+                ", "
+            )}.`
+        );
+        return;
     }
-  });
-}
 
-/* ---------------------------------------------------------
-   LOCALSTORAGE: GUARDAR / CARGAR
-   --------------------------------------------------------- */
+    // Requisitos OK -> marcar como aprobado
+    aprobados.add(idRamo);
+    this.classList.add("aprobado");
+    this.setAttribute("aria-pressed", "true");
 
-/**
- * Carga desde localStorage el conjunto de ramos aprobados.
- */
-function loadApprovedFromStorage() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return new Set();
-    const arr = JSON.parse(raw);
-    if (!Array.isArray(arr)) return new Set();
-    return new Set(arr);
-  } catch (e) {
-    console.warn("No se pudo leer el estado de la malla desde localStorage:", e);
-    return new Set();
-  }
+    // Guardar y recalcular bloqueos
+    guardarEstadoEnStorage();
+    actualizarBloqueos();
 }
 
 /**
- * Guarda en localStorage el conjunto de ramos aprobados.
+ * Recorre todos los ramos y les pone la clase "bloqueado" si
+ * aún no cumplen con sus requisitos.
  */
-function saveApprovedToStorage() {
-  try {
-    const arr = Array.from(approvedCourses);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
-  } catch (e) {
-    console.warn("No se pudo guardar el estado de la malla en localStorage:", e);
-  }
-}
+function actualizarBloqueos() {
+    const elementosRamos = document.querySelectorAll(".ramo");
 
-/* ---------------------------------------------------------
-   MENSAJES AL USUARIO
-   --------------------------------------------------------- */
+    elementosRamos.forEach((elem) => {
+        const idRamo = elem.dataset.id;
+
+        // Si ya está aprobado, no puede estar bloqueado
+        if (aprobados.has(idRamo)) {
+            elem.classList.remove("bloqueado");
+            return;
+        }
+
+        const reqs = requisitos[idRamo] || [];
+        if (reqs.length === 0) {
+            // Sin requisitos, nunca está bloqueado
+            elem.classList.remove("bloqueado");
+            return;
+        }
+
+        const faltantes = reqs.filter((idReq) => !aprobados.has(idReq));
+        if (faltantes.length > 0) {
+            elem.classList.add("bloqueado");
+        } else {
+            elem.classList.remove("bloqueado");
+        }
+    });
+}
 
 /**
- * Muestra un mensaje en la barra inferior.
- * @param {string} text - texto del mensaje
- * @param {boolean} isError - si es true, se trata como mensaje de bloqueo/error
+ * Muestra un mensaje flotante (tipo "toast") en la parte inferior.
  */
-function showMessage(text, isError = false) {
-  const messageEl = document.getElementById("message-text");
-  const bar = messageEl.parentElement;
+function mostrarMensaje(texto) {
+    const contMensaje = document.getElementById("mensaje");
+    contMensaje.textContent = texto;
+    contMensaje.classList.add("mensaje--visible");
 
-  messageEl.textContent = text || "";
+    // Limpiar timeout anterior, si existe
+    if (mensajeTimeoutId !== null) {
+        clearTimeout(mensajeTimeoutId);
+    }
 
-  // Pequeño efecto visual cuando cambia el mensaje
-  bar.classList.remove("message-bar--highlight");
-  void bar.offsetWidth; // hack para reiniciar la animación
-  bar.classList.add("message-bar--highlight");
-
-  // Si quisieras diferenciar color de error vs info,
-  // se podría cambiar aquí con clases adicionales.
+    // Ocultar después de unos segundos
+    mensajeTimeoutId = setTimeout(() => {
+        contMensaje.classList.remove("mensaje--visible");
+        mensajeTimeoutId = null;
+    }, 4500);
 }
 
+/**
+ * Carga el set de ramos aprobados desde localStorage.
+ */
+function cargarEstadoDesdeStorage() {
+    try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        if (!data) {
+            aprobados = new Set();
+            return;
+        }
+        const arregloIds = JSON.parse(data);
+        if (Array.isArray(arregloIds)) {
+            aprobados = new Set(arregloIds);
+        } else {
+            aprobados = new Set();
+        }
+    } catch (err) {
+        console.error("Error al leer localStorage:", err);
+        aprobados = new Set();
+    }
+}
+
+/**
+ * Guarda el estado actual de ramos aprobados en localStorage.
+ */
+function guardarEstadoEnStorage() {
+    try {
+        const arreglo = Array.from(aprobados);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(arreglo));
+    } catch (err) {
+        console.error("Error al guardar en localStorage:", err);
+    }
+}
